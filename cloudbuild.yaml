@@ -1,0 +1,26 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "VAR1=${_VAR1}",
+        "-t",
+        "gcr.io/emely-gcp/testenvvar",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/emely-gcp/testenvvar"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "testenvvar",
+        "--image=gcr.io/emely-gcp/testenvvar",
+        "--platform=managed",
+        "--region=europe-west3",
+        "--allow-unauthenticated",
+        "--memory=256Mi",
+        "--max-instances=2",
+      ]
